@@ -25,6 +25,10 @@ public class Student {
     @OneToMany(mappedBy = "student")
     private List<Enrollment> enrollmentList;
 
+    public Student(){
+
+    }
+
     public Student(String name, String email) {
         this.name = name;
         this.email = email;
