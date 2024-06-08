@@ -11,12 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping (value = "/enrollment")
 public class EnrollmentController {
-
-    @Autowired
-    private EnrollmentRepository enrollmentRepository;
 
     @Autowired
     private EnrollmentService enrollmentService;
@@ -30,6 +29,16 @@ public class EnrollmentController {
     public ResponseEntity<Enrollment> findById(@PathVariable Long id){
         return enrollmentService.findById(id).map(enrollment -> ResponseEntity.ok().body(enrollment))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Retorna a lista com todos as matrículas
+     * @return
+     */
+    @GetMapping
+    public ResponseEntity<List<Enrollment>> getAllEnrollment(){
+        List<Enrollment> list = enrollmentService.getAllEnrollment();
+        return ResponseEntity.ok().body(list);
     }
 
     /**

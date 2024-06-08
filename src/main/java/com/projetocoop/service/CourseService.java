@@ -1,12 +1,11 @@
 package com.projetocoop.service;
 
 import com.projetocoop.entities.Course;
-import com.projetocoop.entities.Student;
 import com.projetocoop.repositories.CourseRepository;
-import com.projetocoop.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +16,10 @@ public class CourseService {
 
     public Optional<Course> findById(Long id){
         return courseRepository.findById(id);
+    }
+
+    public List<Course> getAllCourses(){
+        return courseRepository.findAll();
     }
 
     public Optional<Course> updateCourse(Long id, Course updatedCourse) {

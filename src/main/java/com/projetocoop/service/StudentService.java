@@ -23,6 +23,10 @@ public class StudentService {
         return studentRepository.findById(id);
     }
 
+    public List<Student> getAllCourses(){
+        return studentRepository.findAll();
+    }
+
     public Optional<Student> updateStudent(Long id, Student updatedStudent) {
         return studentRepository.findById(id).map(student -> {
             student.setName(updatedStudent.getName());

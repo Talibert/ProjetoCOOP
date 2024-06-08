@@ -1,22 +1,17 @@
 package com.projetocoop.controller;
 
 import com.projetocoop.entities.Course;
-import com.projetocoop.entities.Student;
-import com.projetocoop.repositories.CourseRepository;
-import com.projetocoop.repositories.StudentRepository;
 import com.projetocoop.service.CourseService;
-import com.projetocoop.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping (value = "/course")
 public class CourseController {
-
-    @Autowired
-    private CourseRepository courseRepository;
 
     @Autowired
     private CourseService courseService;
@@ -30,6 +25,16 @@ public class CourseController {
     public ResponseEntity<Course> findById(@PathVariable Long id){
         return courseService.findById(id).map(course -> ResponseEntity.ok().body(course))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Retorna a lista com todos os cursos
+     * @return
+     */
+    @GetMapping
+    public ResponseEntity<List<Course>> getAllCourses(){
+        List<Course> list = courseService.getAllCourses();
+        return ResponseEntity.ok().body(list);
     }
 
     /**
