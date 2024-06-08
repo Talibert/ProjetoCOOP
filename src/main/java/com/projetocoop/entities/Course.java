@@ -29,6 +29,10 @@ public class Course {
     @Column
     private CoursesType coursesType;
 
+    public Course(){
+
+    }
+
     public Course(String name, String description, double duration, CoursesType coursesType) {
         this.name = name;
         this.description = description;

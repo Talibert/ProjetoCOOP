@@ -25,6 +25,10 @@ public class Enrollment {
     @Column
     private Date enrollmentDate;
 
+    public Enrollment(){
+
+    }
+
     public Enrollment(Student student, Course course) {
         this.student = student;
         this.course = course;
