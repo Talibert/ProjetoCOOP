@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.util.List;
+
 
 /**
  * A interface CommandLineRunner força a implementação do método run.
@@ -23,7 +25,12 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Student testStudent = new Student("Guilherme", "guilhermetaliberti@gmail.com");
-        studentRepository.save(testStudent);
+        Student student1 = new Student("Guilherme", "guilhermetaliberti@gmail.com");
+        Student student2 = new Student("Pontifici", "pontifici@yahoo.com");
+        Student student3 = new Student("Jeffinho", "jeffinho@bosta.com");
+
+        List<Student> students = List.of(student1, student2, student3);
+
+        studentRepository.saveAll(students);
     }
 }
