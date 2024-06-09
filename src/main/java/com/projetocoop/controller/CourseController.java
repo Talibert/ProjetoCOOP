@@ -41,18 +41,18 @@ public class CourseController {
     /**
      * Altera os dados do curso desejado
      * @param id
-     * @param updatedCourse
+     * @param courseDTO
      * @return
      */
     @PutMapping (value = "/{id}")
-    public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody Course updatedCourse){
-        return courseService.updateCourse(id, updatedCourse).map(course -> ResponseEntity.ok().body(course))
+    public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody CourseDTO courseDTO){
+        return courseService.updateCourse(id, courseDTO).map(course -> ResponseEntity.ok().body(course))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     /**
      * Cria um novo curso
-     * @param newCourse
+     * @param courseDTO
      * @return
      */
     @PostMapping

@@ -23,12 +23,12 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public Optional<Course> updateCourse(Long id, Course updatedCourse) {
+    public Optional<Course> updateCourse(Long id, CourseDTO courseDTO) {
         return courseRepository.findById(id).map(course -> {
-            course.setName(updatedCourse.getName());
-            course.setDescription(updatedCourse.getDescription());
-            course.setDuration(updatedCourse.getDuration());
-            course.setCoursesType(updatedCourse.getCoursesType());
+            course.setName(courseDTO.getName());
+            course.setDescription(courseDTO.getDescription());
+            course.setDuration(courseDTO.getDuration());
+            course.setCoursesType(courseDTO.getCoursesType());
             return courseRepository.save(course);
         });
     }

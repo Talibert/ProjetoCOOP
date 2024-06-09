@@ -1,5 +1,6 @@
 package com.projetocoop.controller;
 
+import com.projetocoop.dto.StudentDTO;
 import com.projetocoop.entities.Student;
 import com.projetocoop.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,23 +41,23 @@ public class StudentController {
     /**
      * Altera os dados do estudante desejado
      * @param id
-     * @param updatedStudent
+     * @param studentDTO
      * @return
      */
     @PutMapping (value = "/{id}")
-    public ResponseEntity<Student> update(@PathVariable Long id, @RequestBody Student updatedStudent){
-        return studentService.updateStudent(id, updatedStudent).map(student -> ResponseEntity.ok().body(student))
+    public ResponseEntity<Student> update(@PathVariable Long id, @RequestBody StudentDTO studentDTO){
+        return studentService.updateStudent(id, studentDTO).map(student -> ResponseEntity.ok().body(student))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     /**
      * Cria um novo estudante
-     * @param newStudent
+     * @param studentDTO
      * @return
      */
     @PostMapping
-    public ResponseEntity<Student> insert(@RequestBody Student newStudent){
-        Student student = studentService.insertStudent(newStudent);
+    public ResponseEntity<Student> insert(@RequestBody StudentDTO studentDTO){
+        Student student = studentService.insertStudent(studentDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(student);
     }
 

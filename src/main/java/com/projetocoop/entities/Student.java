@@ -1,5 +1,6 @@
 package com.projetocoop.entities;
 
+import com.projetocoop.dto.StudentDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -32,6 +33,12 @@ public class Student {
     public Student(String name, String email) {
         this.name = name;
         this.email = email;
+        this.enrollmentList = new ArrayList<>();
+    }
+
+    public Student(StudentDTO studentDTO){
+        this.name = studentDTO.getName();
+        this.email = studentDTO.getEmail();
         this.enrollmentList = new ArrayList<>();
     }
 
