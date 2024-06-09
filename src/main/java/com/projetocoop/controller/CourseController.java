@@ -1,5 +1,6 @@
 package com.projetocoop.controller;
 
+import com.projetocoop.dto.CourseDTO;
 import com.projetocoop.entities.Course;
 import com.projetocoop.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +56,8 @@ public class CourseController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<Course> insert(@RequestBody Course newCourse){
-        Course course = courseService.insertCourse(newCourse);
+    public ResponseEntity<Course> insert(@RequestBody CourseDTO courseDTO){
+        Course course = courseService.insertCourse(courseDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(course);
     }
 

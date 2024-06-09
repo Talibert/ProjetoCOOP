@@ -1,5 +1,6 @@
 package com.projetocoop.entities;
 
+import com.projetocoop.dto.CourseDTO;
 import com.projetocoop.types.CoursesType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -29,8 +30,11 @@ public class Course {
     @Column
     private CoursesType coursesType;
 
-    public Course(){
+    private String teacher;
 
+    private String especialization;
+
+    public Course(){
     }
 
     public Course(String name, String description, double duration, CoursesType coursesType) {
@@ -38,6 +42,17 @@ public class Course {
         this.description = description;
         this.duration = duration;
         this.coursesType = coursesType;
+        this.teacher = this.coursesType.getTeacher().getName();
+        this.especialization = this.coursesType.getEspecializationType();
+    }
+
+    public Course(CourseDTO courseDTO){
+        this.name = courseDTO.getName();
+        this.description = courseDTO.getDescription();
+        this.duration = courseDTO.getDuration();
+        this.coursesType = courseDTO.getCoursesType();
+        this.teacher = this.coursesType.getTeacher().getName();
+        this.especialization = this.coursesType.getEspecializationType();
     }
 
     public long getId() { return id; }
@@ -72,5 +87,13 @@ public class Course {
 
     public void setCoursesType(CoursesType coursesType) {
         this.coursesType = coursesType;
+    }
+
+    public String getTeacher(){
+        return teacher;
+    }
+
+    public String getEspecialization(){
+        return especialization;
     }
 }

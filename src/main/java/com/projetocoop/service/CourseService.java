@@ -1,5 +1,6 @@
 package com.projetocoop.service;
 
+import com.projetocoop.dto.CourseDTO;
 import com.projetocoop.entities.Course;
 import com.projetocoop.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,9 @@ public class CourseService {
         });
     }
 
-    public Course insertCourse(Course newCourse){
-        return courseRepository.save(newCourse);
+    public Course insertCourse(CourseDTO courseDTO){
+        Course course = new Course(courseDTO);
+        return courseRepository.save(course);
     }
 
     public void deleteCourse(Long id){
