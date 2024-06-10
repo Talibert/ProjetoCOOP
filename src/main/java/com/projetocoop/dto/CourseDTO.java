@@ -4,22 +4,29 @@ import com.projetocoop.types.CoursesType;
 
 public class CourseDTO {
 
+    private Long id;
+
     private String name;
 
     private String description;
 
-    private double duration;
+    private Double duration;
 
     private CoursesType coursesType;
 
     public CourseDTO() {
     }
 
-    public CourseDTO(String name, String description, double duration, CoursesType coursesType) {
+    public CourseDTO(Long id, String name, String description, Double duration, CoursesType coursesType) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.duration = duration;
         this.coursesType = coursesType;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -38,11 +45,11 @@ public class CourseDTO {
         this.description = description;
     }
 
-    public double getDuration() {
+    public Double getDuration() {
         return duration;
     }
 
-    public void setDuration(double duration) {
+    public void setDuration(Double duration) {
         this.duration = duration;
     }
 

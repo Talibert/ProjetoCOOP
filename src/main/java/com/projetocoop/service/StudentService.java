@@ -15,14 +15,29 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
+    /**
+     * Encontra um estudante através do id recebido
+     * @param id
+     * @return
+     */
     public Optional<Student> findById(Long id){
         return studentRepository.findById(id);
     }
 
+    /**
+     * Retorna uma lista com todos os estudantes
+     * @return
+     */
     public List<Student> getAllStudents(){
         return studentRepository.findAll();
     }
 
+    /**
+     * Atualiza um estudante existente
+     * @param id
+     * @param studentDTO
+     * @return
+     */
     public Optional<Student> updateStudent(Long id, StudentDTO studentDTO) {
         return studentRepository.findById(id).map(student -> {
             student.setName(studentDTO.getName());
@@ -31,11 +46,20 @@ public class StudentService {
         });
     }
 
+    /**
+     * Cria um novo estudante
+     * @param studentDTO
+     * @return
+     */
     public Student insertStudent(StudentDTO studentDTO){
         Student student = new Student(studentDTO);
         return studentRepository.save(student);
     }
 
+    /**
+     * Deleta um estudante através do id recebido
+     * @param id
+     */
     public void deleteStudent(Long id){
         studentRepository.deleteById(id);
     }

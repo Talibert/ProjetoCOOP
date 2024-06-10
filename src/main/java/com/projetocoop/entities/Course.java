@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.lang.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "course")
 public class Course {
@@ -24,7 +27,7 @@ public class Course {
 
     @NotNull
     @Column
-    private double duration;
+    private Double duration;
 
     @NotNull
     @Column
@@ -34,16 +37,20 @@ public class Course {
 
     private String especialization;
 
+    @OneToMany(mappedBy = "course")
+    private List<Enrollment> enrollmentList;
+
     public Course(){
     }
 
-    public Course(String name, String description, double duration, CoursesType coursesType) {
+    public Course(String name, String description, Double duration, CoursesType coursesType) {
         this.name = name;
         this.description = description;
         this.duration = duration;
         this.coursesType = coursesType;
         this.teacher = this.coursesType.getTeacher().getName();
         this.especialization = this.coursesType.getEspecializationType();
+        this.enrollmentList = new ArrayList<>();
     }
 
     public Course(CourseDTO courseDTO){
@@ -53,6 +60,7 @@ public class Course {
         this.coursesType = courseDTO.getCoursesType();
         this.teacher = this.coursesType.getTeacher().getName();
         this.especialization = this.coursesType.getEspecializationType();
+        this.enrollmentList = new ArrayList<>();
     }
 
     public long getId() { return id; }
@@ -73,11 +81,11 @@ public class Course {
         this.description = description;
     }
 
-    public double getDuration() {
+    public Double getDuration() {
         return duration;
     }
 
-    public void setDuration(double duration) {
+    public void setDuration(Double duration) {
         this.duration = duration;
     }
 
@@ -89,11 +97,28 @@ public class Course {
         this.coursesType = coursesType;
     }
 
+    public void setTeacher(String teacher){
+        this.teacher = teacher;
+    }
+
     public String getTeacher(){
         return teacher;
+    }
+
+    public void setEspecialization(String especialization){
+        this.especialization = especialization;
     }
 
     public String getEspecialization(){
         return especialization;
     }
+
+    public void addEnrollment(Enrollment enrollment) {
+        enrollmentList.add(enrollment);
+    }
+
+    public List<Enrollment> getEnrollmentList(){
+        return enrollmentList;
+    }
+
 }

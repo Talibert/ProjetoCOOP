@@ -13,11 +13,11 @@ public class Enrollment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student student;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     private Course course;
 

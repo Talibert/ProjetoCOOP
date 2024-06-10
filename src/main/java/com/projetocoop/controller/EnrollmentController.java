@@ -1,5 +1,8 @@
 package com.projetocoop.controller;
 
+import com.projetocoop.dto.CourseDTO;
+import com.projetocoop.dto.EnrollmentDTO;
+import com.projetocoop.dto.StudentDTO;
 import com.projetocoop.entities.Course;
 import com.projetocoop.entities.Enrollment;
 import com.projetocoop.repositories.CourseRepository;
@@ -44,23 +47,30 @@ public class EnrollmentController {
     /**
      * Altera os dados da matrícula desejada
      * @param id
-     * @param updatedEnrollment
+     * @param enrollmentDTO
      * @return
      */
     @PutMapping (value = "/{id}")
-    public ResponseEntity<Enrollment> update(@PathVariable Long id, @RequestBody Enrollment updatedEnrollment){
-        return enrollmentService.updateEnrollment(id, updatedEnrollment).map(enrollment -> ResponseEntity.ok().body(enrollment))
+    public ResponseEntity<Enrollment> update(@PathVariable Long id, @RequestBody EnrollmentDTO enrollmentDTO){
+        return enrollmentService.updateEnrollment(id, enrollmentDTO).map(enrollment -> ResponseEntity.ok().body(enrollment))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     /**
      * Cria uma nova matrícula
-     * @param newEnrollment
+     * @param enrollmentDTO
      * @return
      */
     @PostMapping
-    public ResponseEntity<Enrollment> insert(@RequestBody Enrollment newEnrollment){
-        Enrollment enrollment = enrollmentService.insertEnrollment(newEnrollment);
+    public ResponseEntity<?> insert(@RequestBody EnrollmentDTO enrollmentDTO){
+        Enrollment enrollment = null;
+
+        try {
+            enrollment = enrollmentService.insertEnrollment(enrollmentDTO);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollment);
     }
 
