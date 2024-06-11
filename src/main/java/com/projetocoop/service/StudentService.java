@@ -1,6 +1,6 @@
 package com.projetocoop.service;
 
-import com.projetocoop.dto.StudentDTO;
+import com.projetocoop.dto.StudentRequestDTO;
 import com.projetocoop.entities.Student;
 import com.projetocoop.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class StudentService {
      * @param studentDTO
      * @return
      */
-    public Optional<Student> updateStudent(Long id, StudentDTO studentDTO) {
+    public Optional<Student> updateStudent(Long id, StudentRequestDTO studentDTO) {
         return studentRepository.findById(id).map(student -> {
             student.setName(studentDTO.getName());
             student.setEmail(studentDTO.getEmail());
@@ -51,7 +51,7 @@ public class StudentService {
      * @param studentDTO
      * @return
      */
-    public Student insertStudent(StudentDTO studentDTO){
+    public Student insertStudent(StudentRequestDTO studentDTO){
         Student student = new Student(studentDTO);
         return studentRepository.save(student);
     }

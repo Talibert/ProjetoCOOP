@@ -1,21 +1,24 @@
 package com.projetocoop.dto;
 
-import com.projetocoop.entities.Course;
-import com.projetocoop.entities.Student;
+import com.projetocoop.entities.Enrollment;
 
-public class EnrollmentDTO {
+/**
+ * Classe DTO responsável por encapsular objetos que serão recebidos como parâmetro da classe Enrollment
+ */
+public class EnrollmentRequestDTO {
 
     private Long studentId;
 
     private Long courseId;
 
-    public EnrollmentDTO() {
+    public EnrollmentRequestDTO() {
     }
 
-    public EnrollmentDTO(Long student, Long courseId) {
+    public EnrollmentRequestDTO(Long studentId, Long courseId) {
         this.studentId = studentId;
         this.courseId = courseId;
     }
+
 
     public Long getStudentId() {
         return studentId;
@@ -32,4 +35,5 @@ public class EnrollmentDTO {
     public void setCourseId(Long courseId) {
         this.courseId = courseId;
     }
+
 }

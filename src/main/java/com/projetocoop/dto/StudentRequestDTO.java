@@ -1,6 +1,6 @@
 package com.projetocoop.dto;
 
-public class StudentDTO {
+public class StudentRequestDTO {
 
     private Long id;
 
@@ -8,10 +8,10 @@ public class StudentDTO {
 
     private String email;
 
-    public StudentDTO() {
+    public StudentRequestDTO() {
     }
 
-    public StudentDTO(Long id, String name, String email) {
+    public StudentRequestDTO(Long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;

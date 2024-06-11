@@ -1,6 +1,6 @@
 package com.projetocoop.controller;
 
-import com.projetocoop.dto.CourseDTO;
+import com.projetocoop.dto.CourseRequestDTO;
 import com.projetocoop.entities.Course;
 import com.projetocoop.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,23 +41,23 @@ public class CourseController {
     /**
      * Altera os dados do curso desejado
      * @param id
-     * @param courseDTO
+     * @param courseRequestDTO
      * @return
      */
     @PutMapping (value = "/{id}")
-    public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody CourseDTO courseDTO){
-        return courseService.updateCourse(id, courseDTO).map(course -> ResponseEntity.ok().body(course))
+    public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody CourseRequestDTO courseRequestDTO){
+        return courseService.updateCourse(id, courseRequestDTO).map(course -> ResponseEntity.ok().body(course))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     /**
      * Cria um novo curso
-     * @param courseDTO
+     * @param courseRequestDTO
      * @return
      */
     @PostMapping
-    public ResponseEntity<Course> insert(@RequestBody CourseDTO courseDTO){
-        Course course = courseService.insertCourse(courseDTO);
+    public ResponseEntity<Course> insert(@RequestBody CourseRequestDTO courseRequestDTO){
+        Course course = courseService.insertCourse(courseRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(course);
     }
 
@@ -67,7 +67,7 @@ public class CourseController {
      * @return
      */
     @DeleteMapping (value ="/{id}")
-    public ResponseEntity<Course> delete(@PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long id){
         courseService.deleteCourse(id);
         return ResponseEntity.noContent().build();
     }

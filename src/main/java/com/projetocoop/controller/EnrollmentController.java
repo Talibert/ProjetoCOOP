@@ -1,13 +1,9 @@
 package com.projetocoop.controller;
 
-import com.projetocoop.dto.CourseDTO;
-import com.projetocoop.dto.EnrollmentDTO;
-import com.projetocoop.dto.StudentDTO;
-import com.projetocoop.entities.Course;
+import com.projetocoop.dto.EnrollmentRequestDTO;
+import com.projetocoop.dto.EnrollmentResponseDTO;
 import com.projetocoop.entities.Enrollment;
-import com.projetocoop.repositories.CourseRepository;
-import com.projetocoop.repositories.EnrollmentRepository;
-import com.projetocoop.service.CourseService;
+import com.projetocoop.exceptions.EnrollmentNotFoundException;
 import com.projetocoop.service.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,9 +25,9 @@ public class EnrollmentController {
      * @return
      */
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Enrollment> findById(@PathVariable Long id){
-        return enrollmentService.findById(id).map(enrollment -> ResponseEntity.ok().body(enrollment))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<EnrollmentResponseDTO> findById(@PathVariable Long id){
+        EnrollmentResponseDTO enrollmentResponseDTO = enrollmentService.findById(id);
+        return ResponseEntity.ok().body(enrollmentResponseDTO);
     }
 
     /**
@@ -39,36 +35,36 @@ public class EnrollmentController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<Enrollment>> getAllEnrollment(){
-        List<Enrollment> list = enrollmentService.getAllEnrollment();
+    public ResponseEntity<List<EnrollmentResponseDTO>> getAllEnrollment(){
+        List<EnrollmentResponseDTO> list = enrollmentService.getAllEnrollment();
         return ResponseEntity.ok().body(list);
     }
 
     /**
      * Altera os dados da matrícula desejada
      * @param id
-     * @param enrollmentDTO
+     * @param enrollmentRequestDTO
      * @return
      */
-    @PutMapping (value = "/{id}")
-    public ResponseEntity<Enrollment> update(@PathVariable Long id, @RequestBody EnrollmentDTO enrollmentDTO){
-        return enrollmentService.updateEnrollment(id, enrollmentDTO).map(enrollment -> ResponseEntity.ok().body(enrollment))
-                .orElse(ResponseEntity.notFound().build());
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<EnrollmentResponseDTO> update(@PathVariable Long id, @RequestBody EnrollmentRequestDTO enrollmentRequestDTO) {
+        EnrollmentResponseDTO enrollmentResponseDTO = enrollmentService.updateEnrollment(id, enrollmentRequestDTO);
+        return ResponseEntity.ok().body(enrollmentResponseDTO);
     }
 
     /**
      * Cria uma nova matrícula
-     * @param enrollmentDTO
+     * @param enrollmentRequestDTO
      * @return
      */
     @PostMapping
-    public ResponseEntity<?> insert(@RequestBody EnrollmentDTO enrollmentDTO){
-        Enrollment enrollment = null;
+    public ResponseEntity<?> insert(@RequestBody EnrollmentRequestDTO enrollmentRequestDTO){
+        EnrollmentResponseDTO enrollment = null;
 
         try {
-            enrollment = enrollmentService.insertEnrollment(enrollmentDTO);
+            enrollment = enrollmentService.insertEnrollment(enrollmentRequestDTO);
         } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollment);
@@ -80,8 +76,8 @@ public class EnrollmentController {
      * @return
      */
     @DeleteMapping (value ="/{id}")
-    public ResponseEntity<Enrollment> delete(@PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long id){
         enrollmentService.deleteEnrollment(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body("Matrícula de id: " + id + " deletada com sucesso!");
     }
 }

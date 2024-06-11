@@ -37,6 +37,10 @@ public class Enrollment {
         student.addEnrolment(this);
     }
 
+    public long getId() {
+        return id;
+    }
+
     public Student getStudent() {
         return student;
     }

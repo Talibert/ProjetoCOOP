@@ -1,10 +1,9 @@
 package com.projetocoop.entities;
 
-import com.projetocoop.dto.CourseDTO;
+import com.projetocoop.dto.CourseRequestDTO;
 import com.projetocoop.types.CoursesType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +52,11 @@ public class Course {
         this.enrollmentList = new ArrayList<>();
     }
 
-    public Course(CourseDTO courseDTO){
-        this.name = courseDTO.getName();
-        this.description = courseDTO.getDescription();
-        this.duration = courseDTO.getDuration();
-        this.coursesType = courseDTO.getCoursesType();
+    public Course(CourseRequestDTO courseRequestDTO){
+        this.name = courseRequestDTO.getName();
+        this.description = courseRequestDTO.getDescription();
+        this.duration = courseRequestDTO.getDuration();
+        this.coursesType = courseRequestDTO.getCoursesType();
         this.teacher = this.coursesType.getTeacher().getName();
         this.especialization = this.coursesType.getEspecializationType();
         this.enrollmentList = new ArrayList<>();

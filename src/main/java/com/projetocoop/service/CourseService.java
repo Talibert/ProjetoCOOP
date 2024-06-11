@@ -1,6 +1,6 @@
 package com.projetocoop.service;
 
-import com.projetocoop.dto.CourseDTO;
+import com.projetocoop.dto.CourseRequestDTO;
 import com.projetocoop.entities.Course;
 import com.projetocoop.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,27 +35,27 @@ public class CourseService {
     /**
      * Altera um curso existente
      * @param id
-     * @param courseDTO
+     * @param courseRequestDTO
      * @return
      */
-    public Optional<Course> updateCourse(Long id, CourseDTO courseDTO) {
+    public Optional<Course> updateCourse(Long id, CourseRequestDTO courseRequestDTO) {
         return courseRepository.findById(id).map(course -> {
-            if(courseDTO.getName() != null){
-                course.setName(courseDTO.getName());
+            if(courseRequestDTO.getName() != null){
+                course.setName(courseRequestDTO.getName());
             }
-            if(courseDTO.getDescription() != null){
-                course.setDescription(courseDTO.getDescription());
+            if(courseRequestDTO.getDescription() != null){
+                course.setDescription(courseRequestDTO.getDescription());
             }
-            if(courseDTO.getDuration() != null){
-                course.setDuration(courseDTO.getDuration());
+            if(courseRequestDTO.getDuration() != null){
+                course.setDuration(courseRequestDTO.getDuration());
             }
-            if(courseDTO.getCoursesType() != null){
-                course.setCoursesType(courseDTO.getCoursesType());
-                if(courseDTO.getCoursesType().getTeacher() != null){
-                    course.setTeacher(courseDTO.getCoursesType().getTeacher().getName());
+            if(courseRequestDTO.getCoursesType() != null){
+                course.setCoursesType(courseRequestDTO.getCoursesType());
+                if(courseRequestDTO.getCoursesType().getTeacher() != null){
+                    course.setTeacher(courseRequestDTO.getCoursesType().getTeacher().getName());
                 }
-                if(courseDTO.getCoursesType().getEspecializationType() != null){
-                    course.setEspecialization(courseDTO.getCoursesType().getEspecializationType());
+                if(courseRequestDTO.getCoursesType().getEspecializationType() != null){
+                    course.setEspecialization(courseRequestDTO.getCoursesType().getEspecializationType());
                 }
             }
             return courseRepository.save(course);
@@ -64,11 +64,11 @@ public class CourseService {
 
     /**
      * Cria um novo curso
-     * @param courseDTO
+     * @param courseRequestDTO
      * @return
      */
-    public Course insertCourse(CourseDTO courseDTO){
-        Course course = new Course(courseDTO);
+    public Course insertCourse(CourseRequestDTO courseRequestDTO){
+        Course course = new Course(courseRequestDTO);
         return courseRepository.save(course);
     }
 

@@ -1,6 +1,6 @@
 package com.projetocoop.controller;
 
-import com.projetocoop.dto.StudentDTO;
+import com.projetocoop.dto.StudentRequestDTO;
 import com.projetocoop.entities.Student;
 import com.projetocoop.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class StudentController {
      * @return
      */
     @PutMapping (value = "/{id}")
-    public ResponseEntity<Student> update(@PathVariable Long id, @RequestBody StudentDTO studentDTO){
+    public ResponseEntity<Student> update(@PathVariable Long id, @RequestBody StudentRequestDTO studentDTO){
         return studentService.updateStudent(id, studentDTO).map(student -> ResponseEntity.ok().body(student))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -56,7 +56,7 @@ public class StudentController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<Student> insert(@RequestBody StudentDTO studentDTO){
+    public ResponseEntity<Student> insert(@RequestBody StudentRequestDTO studentDTO){
         Student student = studentService.insertStudent(studentDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(student);
     }
@@ -67,7 +67,7 @@ public class StudentController {
      * @return
      */
     @DeleteMapping (value ="/{id}")
-    public ResponseEntity<Student> delete(@PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long id){
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }

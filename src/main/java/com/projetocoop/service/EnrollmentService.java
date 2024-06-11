@@ -1,22 +1,21 @@
 package com.projetocoop.service;
 
-import com.projetocoop.dto.CourseDTO;
-import com.projetocoop.dto.EnrollmentDTO;
-import com.projetocoop.dto.StudentDTO;
+import com.projetocoop.dto.EnrollmentRequestDTO;
+import com.projetocoop.dto.EnrollmentResponseDTO;
 import com.projetocoop.entities.Course;
 import com.projetocoop.entities.Enrollment;
 import com.projetocoop.entities.Student;
+import com.projetocoop.exceptions.CourseNotFoundException;
 import com.projetocoop.exceptions.DuplicateEnrollmenteException;
-import com.projetocoop.repositories.CourseRepository;
+import com.projetocoop.exceptions.EnrollmentNotFoundException;
+import com.projetocoop.exceptions.StudentNotFoundException;
 import com.projetocoop.repositories.EnrollmentRepository;
-import com.projetocoop.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EnrollmentService {
@@ -35,56 +34,78 @@ public class EnrollmentService {
      * @param id
      * @return
      */
-    public Optional<Enrollment> findById(Long id){
-        return enrollmentRepository.findById(id);
+    public EnrollmentResponseDTO findById(Long id){
+        Optional<Enrollment> enrollmentResult = enrollmentRepository.findById(id);
+
+        return enrollmentResult.map(EnrollmentResponseDTO::new)
+                .orElseThrow(() -> new EnrollmentNotFoundException("Matrícula de id: " + id + " não encontrada!"));
     }
 
     /**
      * Retorna uma lista de matrículas
      * @return
      */
-    public List<Enrollment> getAllEnrollment(){
-        return enrollmentRepository.findAll();
+    public List<EnrollmentResponseDTO> getAllEnrollment(){
+        return enrollmentRepository.findAll().stream().map(EnrollmentResponseDTO::new).toList();
     }
 
     /**
      * Atualiza uma matrícula existente
      * @param id
-     * @param enrollmentDTO
+     * @param enrollmentRequestDTO
      * @return
      */
-    public Optional<Enrollment> updateEnrollment(Long id, EnrollmentDTO enrollmentDTO) {
-        return enrollmentRepository.findById(id).map(enrollment -> {
-            Optional<Student> student = studentService.findById(enrollmentDTO.getStudentId());
-            Optional<Course> course = courseService.findById(enrollmentDTO.getCourseId());
+    public EnrollmentResponseDTO updateEnrollment(Long id, EnrollmentRequestDTO enrollmentRequestDTO) throws EnrollmentNotFoundException {
+        Optional<Enrollment> enrollmentResult = enrollmentRepository.findById(id).map(enrollment -> {
+            Optional<Student> student = studentService.findById(enrollmentRequestDTO.getStudentId());
+            Optional<Course> course = courseService.findById(enrollmentRequestDTO.getCourseId());
             student.ifPresent(enrollment::setStudent);
             course.ifPresent(enrollment::setCourse);
             return enrollmentRepository.save(enrollment);
         });
+
+        return enrollmentResult.map(EnrollmentResponseDTO::new)
+                .orElseThrow(() -> new EnrollmentNotFoundException("Matrícula de id: " + id + " não encontrada!"));
     }
 
     /**
      * Cria uma nova matrícula
-     * @param enrollmentDTO
+     * @param enrollmentRequestDTO
      * @return
      * @throws Exception
      */
-    public Enrollment insertEnrollment(EnrollmentDTO enrollmentDTO) throws Exception {
-        Optional<Student> student = studentService.findById(enrollmentDTO.getStudentId());
+    public EnrollmentResponseDTO insertEnrollment(EnrollmentRequestDTO enrollmentRequestDTO) throws Exception {
+        List<EnrollmentResponseDTO> allEnrollment = getAllEnrollment();
 
-        if(student.isEmpty()){
-            throw new Exception("O estudante não existe");
+        for(EnrollmentResponseDTO enrollmentResponseDTO : allEnrollment) {
+            if(enrollmentRequestDTO.getStudentId() == enrollmentResponseDTO.getStudentId()
+                    && enrollmentRequestDTO.getCourseId() == enrollmentResponseDTO.getCourseId()) {
+                StringBuilder mensagem = new StringBuilder();
+                mensagem.append("A matrícula do estudante: ")
+                        .append(enrollmentResponseDTO.getStudentName())
+                        .append(" para o curso: ")
+                        .append(enrollmentResponseDTO.getCourseName())
+                        .append(" já existe!");
+
+                throw new DuplicateEnrollmenteException(mensagem.toString());
+            }
         }
 
-        Optional<Course> course = courseService.findById(enrollmentDTO.getCourseId());
+        Optional<Student> student = studentService.findById(enrollmentRequestDTO.getStudentId());
+
+        if(student.isEmpty()){
+            throw new StudentNotFoundException("O estudante de id: " + enrollmentRequestDTO.getStudentId() + " não existe");
+        }
+
+        Optional<Course> course = courseService.findById(enrollmentRequestDTO.getCourseId());
 
         if(course.isEmpty()){
-            throw new Exception("O curso não existe");
+            throw new CourseNotFoundException("O curso de id: " + enrollmentRequestDTO.getCourseId() + " não existe");
         }
 
         Enrollment enrollment = new Enrollment(student.get(), course.get());
 
-        return enrollmentRepository.save(enrollment);
+        return new EnrollmentResponseDTO(enrollmentRepository.save(enrollment));
     }
 
     /**
@@ -92,6 +113,9 @@ public class EnrollmentService {
      * @param id
      */
     public void deleteEnrollment(Long id){
+        if(!enrollmentRepository.existsById(id)) {
+            throw new EnrollmentNotFoundException("Matrícula de id: " + id + " não encontrada!");
+        }
         enrollmentRepository.deleteById(id);
     }
 
