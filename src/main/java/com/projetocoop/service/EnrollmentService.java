@@ -94,6 +94,11 @@ public class EnrollmentService {
         enrollmentRepository.deleteById(id);
     }
 
+    /**
+     * Verifica se uma matrícula existe
+     * @param enrollmentRequestDTO
+     * @param allEnrollment
+     */
     private void verifyIfEnrollmentExists(EnrollmentRequestDTO enrollmentRequestDTO, List<Enrollment> allEnrollment) {
         for(Enrollment enrollment : allEnrollment) {
             if(enrollmentRequestDTO.getStudentId() == enrollment.getStudent().getId()
