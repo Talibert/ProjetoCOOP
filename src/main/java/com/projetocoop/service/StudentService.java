@@ -1,7 +1,9 @@
 package com.projetocoop.service;
 
-import com.projetocoop.dto.StudentRequestDTO;
+import com.projetocoop.dto.request.StudentRequestDTO;
+import com.projetocoop.dto.response.StudentResponseDTO;
 import com.projetocoop.entities.Student;
+import com.projetocoop.exceptions.StudentNotFoundException;
 import com.projetocoop.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +22,14 @@ public class StudentService {
      * @param id
      * @return
      */
-    public Optional<Student> findById(Long id){
-        return studentRepository.findById(id);
+    public Student findById(Long id){
+
+        Optional<Student> student= studentRepository.findById(id);
+        if(student.isEmpty()){
+            throw new StudentNotFoundException("O estudante de id: " + id + " não existe!");
+        }
+
+        return student.get();
     }
 
     /**
@@ -38,12 +46,16 @@ public class StudentService {
      * @param studentDTO
      * @return
      */
-    public Optional<Student> updateStudent(Long id, StudentRequestDTO studentDTO) {
-        return studentRepository.findById(id).map(student -> {
+    public Student updateStudent(Long id, StudentRequestDTO studentDTO) {
+        Student student = findById(id);
+        if(studentDTO.getName() != null){
             student.setName(studentDTO.getName());
+        }
+        if(studentDTO.getEmail() != null){
             student.setEmail(studentDTO.getEmail());
-            return studentRepository.save(student);
-        });
+        }
+
+        return studentRepository.save(student);
     }
 
     /**

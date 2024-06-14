@@ -1,4 +1,4 @@
-package com.projetocoop.dto;
+package com.projetocoop.dto.request;
 
 import com.projetocoop.entities.Enrollment;
 

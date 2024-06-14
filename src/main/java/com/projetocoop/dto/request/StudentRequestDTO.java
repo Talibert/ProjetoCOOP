@@ -1,8 +1,6 @@
-package com.projetocoop.dto;
+package com.projetocoop.dto.request;
 
 public class StudentRequestDTO {
-
-    private Long id;
 
     private String name;
 
@@ -11,18 +9,9 @@ public class StudentRequestDTO {
     public StudentRequestDTO() {
     }
 
-    public StudentRequestDTO(Long id, String name, String email) {
-        this.id = id;
+    public StudentRequestDTO(String name, String email) {
         this.name = name;
         this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

@@ -1,21 +1,17 @@
 package com.projetocoop.service;
 
-import com.projetocoop.dto.EnrollmentRequestDTO;
-import com.projetocoop.dto.EnrollmentResponseDTO;
+import com.projetocoop.dto.request.EnrollmentRequestDTO;
 import com.projetocoop.entities.Course;
 import com.projetocoop.entities.Enrollment;
 import com.projetocoop.entities.Student;
-import com.projetocoop.exceptions.CourseNotFoundException;
 import com.projetocoop.exceptions.DuplicateEnrollmenteException;
 import com.projetocoop.exceptions.EnrollmentNotFoundException;
-import com.projetocoop.exceptions.StudentNotFoundException;
 import com.projetocoop.repositories.EnrollmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EnrollmentService {
@@ -34,19 +30,19 @@ public class EnrollmentService {
      * @param id
      * @return
      */
-    public EnrollmentResponseDTO findById(Long id){
-        Optional<Enrollment> enrollmentResult = enrollmentRepository.findById(id);
+    public Enrollment findById(Long id){
+        Optional<Enrollment> enrollment = enrollmentRepository.findById(id);
 
-        return enrollmentResult.map(EnrollmentResponseDTO::new)
-                .orElseThrow(() -> new EnrollmentNotFoundException("Matrícula de id: " + id + " não encontrada!"));
+        return enrollment.map(enrollmentResult -> enrollment.get() )
+                .orElseThrow(() -> new EnrollmentNotFoundException("Matrícula de id: " + id + " não existe!"));
     }
 
     /**
      * Retorna uma lista de matrículas
      * @return
      */
-    public List<EnrollmentResponseDTO> getAllEnrollment(){
-        return enrollmentRepository.findAll().stream().map(EnrollmentResponseDTO::new).toList();
+    public List<Enrollment> getAllEnrollment(){
+        return enrollmentRepository.findAll();
     }
 
     /**
@@ -55,17 +51,18 @@ public class EnrollmentService {
      * @param enrollmentRequestDTO
      * @return
      */
-    public EnrollmentResponseDTO updateEnrollment(Long id, EnrollmentRequestDTO enrollmentRequestDTO) throws EnrollmentNotFoundException {
-        Optional<Enrollment> enrollmentResult = enrollmentRepository.findById(id).map(enrollment -> {
-            Optional<Student> student = studentService.findById(enrollmentRequestDTO.getStudentId());
-            Optional<Course> course = courseService.findById(enrollmentRequestDTO.getCourseId());
-            student.ifPresent(enrollment::setStudent);
-            course.ifPresent(enrollment::setCourse);
-            return enrollmentRepository.save(enrollment);
-        });
+    public Enrollment updateEnrollment(Long id, EnrollmentRequestDTO enrollmentRequestDTO) {
+        List<Enrollment> allEnrollment = getAllEnrollment();
 
-        return enrollmentResult.map(EnrollmentResponseDTO::new)
-                .orElseThrow(() -> new EnrollmentNotFoundException("Matrícula de id: " + id + " não encontrada!"));
+        verifyIfEnrollmentExists(enrollmentRequestDTO, allEnrollment);
+
+        Enrollment enrollment = findById(id);
+        Student student = studentService.findById(enrollmentRequestDTO.getStudentId());
+        Course course = courseService.findById(enrollmentRequestDTO.getCourseId());
+        enrollment.setStudent(student);
+        enrollment.setCourse(course);
+
+        return enrollmentRepository.save(enrollment);
     }
 
     /**
@@ -74,38 +71,16 @@ public class EnrollmentService {
      * @return
      * @throws Exception
      */
-    public EnrollmentResponseDTO insertEnrollment(EnrollmentRequestDTO enrollmentRequestDTO) throws Exception {
-        List<EnrollmentResponseDTO> allEnrollment = getAllEnrollment();
+    public Enrollment insertEnrollment(EnrollmentRequestDTO enrollmentRequestDTO) {
+        List<Enrollment> allEnrollment = getAllEnrollment();
 
-        for(EnrollmentResponseDTO enrollmentResponseDTO : allEnrollment) {
-            if(enrollmentRequestDTO.getStudentId() == enrollmentResponseDTO.getStudentId()
-                    && enrollmentRequestDTO.getCourseId() == enrollmentResponseDTO.getCourseId()) {
-                StringBuilder mensagem = new StringBuilder();
-                mensagem.append("A matrícula do estudante: ")
-                        .append(enrollmentResponseDTO.getStudentName())
-                        .append(" para o curso: ")
-                        .append(enrollmentResponseDTO.getCourseName())
-                        .append(" já existe!");
+        verifyIfEnrollmentExists(enrollmentRequestDTO, allEnrollment);
 
-                throw new DuplicateEnrollmenteException(mensagem.toString());
-            }
-        }
+        Student student = studentService.findById(enrollmentRequestDTO.getStudentId());
+        Course course = courseService.findById(enrollmentRequestDTO.getCourseId());
+        Enrollment enrollment = new Enrollment(student, course);
 
-        Optional<Student> student = studentService.findById(enrollmentRequestDTO.getStudentId());
-
-        if(student.isEmpty()){
-            throw new StudentNotFoundException("O estudante de id: " + enrollmentRequestDTO.getStudentId() + " não existe");
-        }
-
-        Optional<Course> course = courseService.findById(enrollmentRequestDTO.getCourseId());
-
-        if(course.isEmpty()){
-            throw new CourseNotFoundException("O curso de id: " + enrollmentRequestDTO.getCourseId() + " não existe");
-        }
-
-        Enrollment enrollment = new Enrollment(student.get(), course.get());
-
-        return new EnrollmentResponseDTO(enrollmentRepository.save(enrollment));
+        return enrollmentRepository.save(enrollment);
     }
 
     /**
@@ -117,6 +92,22 @@ public class EnrollmentService {
             throw new EnrollmentNotFoundException("Matrícula de id: " + id + " não encontrada!");
         }
         enrollmentRepository.deleteById(id);
+    }
+
+    private void verifyIfEnrollmentExists(EnrollmentRequestDTO enrollmentRequestDTO, List<Enrollment> allEnrollment) {
+        for(Enrollment enrollment : allEnrollment) {
+            if(enrollmentRequestDTO.getStudentId() == enrollment.getStudent().getId()
+                    && enrollmentRequestDTO.getCourseId() == enrollment.getCourse().getId()) {
+                StringBuilder mensagem = new StringBuilder();
+                mensagem.append("A matrícula do estudante: ")
+                        .append(enrollment.getStudent().getName())
+                        .append(" para o curso: ")
+                        .append(enrollment.getCourse().getName())
+                        .append(" já existe!");
+
+                throw new DuplicateEnrollmenteException(mensagem.toString());
+            }
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package com.projetocoop.controller;
 
-import com.projetocoop.dto.StudentRequestDTO;
+import com.projetocoop.dto.request.StudentRequestDTO;
+import com.projetocoop.dto.response.StudentResponseDTO;
 import com.projetocoop.entities.Student;
 import com.projetocoop.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,9 @@ public class StudentController {
      * @return
      */
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Student> findById(@PathVariable Long id){
-        return studentService.findById(id).map(student -> ResponseEntity.ok().body(student))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<StudentResponseDTO> findById(@PathVariable Long id){
+        StudentResponseDTO studentResponseDTO = new StudentResponseDTO(studentService.findById(id));
+        return ResponseEntity.ok().body(studentResponseDTO);
     }
 
     /**
@@ -33,32 +34,32 @@ public class StudentController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<Student>> getAllStudents(){
-        List<Student> list = studentService.getAllStudents();
+    public ResponseEntity<List<StudentResponseDTO>> getAllStudents(){
+        List<StudentResponseDTO> list = studentService.getAllStudents().stream().map(StudentResponseDTO::new).toList();
         return ResponseEntity.ok().body(list);
     }
 
     /**
      * Altera os dados do estudante desejado
      * @param id
-     * @param studentDTO
+     * @param studentRequestDTO
      * @return
      */
     @PutMapping (value = "/{id}")
-    public ResponseEntity<Student> update(@PathVariable Long id, @RequestBody StudentRequestDTO studentDTO){
-        return studentService.updateStudent(id, studentDTO).map(student -> ResponseEntity.ok().body(student))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<StudentResponseDTO> update(@PathVariable Long id, @RequestBody StudentRequestDTO studentRequestDTO){
+        StudentResponseDTO studentResponseDTO = new StudentResponseDTO(studentService.updateStudent(id, studentRequestDTO));
+        return ResponseEntity.ok().body(studentResponseDTO);
     }
 
     /**
      * Cria um novo estudante
-     * @param studentDTO
+     * @param studentRequestDTO
      * @return
      */
     @PostMapping
-    public ResponseEntity<Student> insert(@RequestBody StudentRequestDTO studentDTO){
-        Student student = studentService.insertStudent(studentDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(student);
+    public ResponseEntity<StudentResponseDTO> insert(@RequestBody StudentRequestDTO studentRequestDTO){
+        StudentResponseDTO studentResponseDTO = new StudentResponseDTO(studentService.insertStudent(studentRequestDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(studentResponseDTO);
     }
 
     /**
@@ -67,7 +68,7 @@ public class StudentController {
      * @return
      */
     @DeleteMapping (value ="/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id){
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }

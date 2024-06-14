@@ -1,6 +1,7 @@
 package com.projetocoop.controller;
 
-import com.projetocoop.dto.CourseRequestDTO;
+import com.projetocoop.dto.request.CourseRequestDTO;
+import com.projetocoop.dto.response.CourseResponseDTO;
 import com.projetocoop.entities.Course;
 import com.projetocoop.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,9 @@ public class CourseController {
      * @return
      */
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Course> findById(@PathVariable Long id){
-        return courseService.findById(id).map(course -> ResponseEntity.ok().body(course))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CourseResponseDTO> findById(@PathVariable Long id){
+        CourseResponseDTO courseResponseDTO = new CourseResponseDTO(courseService.findById(id));
+        return ResponseEntity.ok().body(courseResponseDTO);
     }
 
     /**
@@ -33,8 +34,8 @@ public class CourseController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<Course>> getAllCourses(){
-        List<Course> list = courseService.getAllCourses();
+    public ResponseEntity<List<CourseResponseDTO>> getAllCourses(){
+        List<CourseResponseDTO> list = courseService.getAllCourses().stream().map(CourseResponseDTO::new).toList();
         return ResponseEntity.ok().body(list);
     }
 
@@ -45,9 +46,9 @@ public class CourseController {
      * @return
      */
     @PutMapping (value = "/{id}")
-    public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody CourseRequestDTO courseRequestDTO){
-        return courseService.updateCourse(id, courseRequestDTO).map(course -> ResponseEntity.ok().body(course))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CourseResponseDTO> update(@PathVariable Long id, @RequestBody CourseRequestDTO courseRequestDTO){
+        CourseResponseDTO courseResponseDTO = new CourseResponseDTO(courseService.updateCourse(id, courseRequestDTO));
+        return ResponseEntity.ok().body(courseResponseDTO);
     }
 
     /**
@@ -56,9 +57,9 @@ public class CourseController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<Course> insert(@RequestBody CourseRequestDTO courseRequestDTO){
-        Course course = courseService.insertCourse(courseRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(course);
+    public ResponseEntity<CourseResponseDTO> insert(@RequestBody CourseRequestDTO courseRequestDTO){
+        CourseResponseDTO courseResponseDTO = new CourseResponseDTO(courseService.insertCourse(courseRequestDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(courseResponseDTO);
     }
 
     /**
@@ -67,7 +68,7 @@ public class CourseController {
      * @return
      */
     @DeleteMapping (value ="/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id){
         courseService.deleteCourse(id);
         return ResponseEntity.noContent().build();
     }

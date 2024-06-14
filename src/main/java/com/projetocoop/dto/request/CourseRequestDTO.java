@@ -1,10 +1,8 @@
-package com.projetocoop.dto;
+package com.projetocoop.dto.request;
 
 import com.projetocoop.types.CoursesType;
 
 public class CourseRequestDTO {
-
-    private Long id;
 
     private String name;
 
@@ -17,16 +15,11 @@ public class CourseRequestDTO {
     public CourseRequestDTO() {
     }
 
-    public CourseRequestDTO(Long id, String name, String description, Double duration, CoursesType coursesType) {
-        this.id = id;
+    public CourseRequestDTO(String name, String description, Double duration, CoursesType coursesType) {
         this.name = name;
         this.description = description;
         this.duration = duration;
         this.coursesType = coursesType;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {

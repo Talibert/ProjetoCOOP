@@ -1,6 +1,6 @@
 package com.projetocoop.entities;
 
-import com.projetocoop.dto.CourseRequestDTO;
+import com.projetocoop.dto.request.CourseRequestDTO;
 import com.projetocoop.types.CoursesType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
