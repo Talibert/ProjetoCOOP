@@ -30,3 +30,9 @@ PUT -> /student -> atualiza um estudante
 DEL -> /student -> deleta um estudante
 
 
+GET -> /courseType -> recupera os tipos de cursos
+
+
+GET -> /teacher -> recupera os professores
+
+
