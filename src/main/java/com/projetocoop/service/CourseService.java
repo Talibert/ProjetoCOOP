@@ -34,6 +34,10 @@ public class CourseService {
 
     /**
      * Retorna uma lista de cursos de acordo com os parâmetros recebidos
+     * Obs: apenas um parâmetro será aceito, na seguinte ordem de prioridade:
+     * coursesType
+     * teacher
+     * especialization
      * @return
      */
     public List<Course> getCourseList(String coursesType, String teacher, String especialization){
