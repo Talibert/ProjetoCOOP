@@ -2,7 +2,6 @@ package com.projetocoop.controller;
 
 import com.projetocoop.dto.request.CourseRequestDTO;
 import com.projetocoop.dto.response.CourseResponseDTO;
-import com.projetocoop.entities.Course;
 import com.projetocoop.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,8 +33,11 @@ public class CourseController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<CourseResponseDTO>> getAllCourses(){
-        List<CourseResponseDTO> list = courseService.getAllCourses().stream().map(CourseResponseDTO::new).toList();
+    public ResponseEntity<List<CourseResponseDTO>> getCoursesList(
+            @RequestParam(value = "coursesType", required = false) String coursesType,
+            @RequestParam(value = "teacher", required = false) String teacher,
+            @RequestParam(value = "especialization", required = false) String especialization){
+        List<CourseResponseDTO> list = courseService.getCourseList(coursesType, teacher, especialization).stream().map(CourseResponseDTO::new).toList();
         return ResponseEntity.ok().body(list);
     }
 

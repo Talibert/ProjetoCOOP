@@ -38,11 +38,25 @@ public class EnrollmentService {
     }
 
     /**
-     * Retorna uma lista de matrículas
+     * Retorna uma lista de matrículas de acordo com os parâmetros recebidos
      * @return
      */
-    public List<Enrollment> getAllEnrollment(){
-        return enrollmentRepository.findAll();
+    public List<Enrollment> getEnrollmentList(Long studentId, Long courseId){
+        List<Enrollment> enrollmentList;
+
+        if (studentId != null) {
+            enrollmentList = enrollmentRepository.findByStudentId(studentId);
+        } else if (courseId != null) {
+            enrollmentList = enrollmentRepository.findByCourseId(courseId);
+        } else {
+            enrollmentList = enrollmentRepository.findAll();
+        }
+
+        if (enrollmentList.isEmpty()){
+            throw new EnrollmentNotFoundException("Nenhuma matrícula encontrada");
+        }
+
+        return enrollmentList;
     }
 
     /**
@@ -52,7 +66,7 @@ public class EnrollmentService {
      * @return
      */
     public Enrollment updateEnrollment(Long id, EnrollmentRequestDTO enrollmentRequestDTO) {
-        List<Enrollment> allEnrollment = getAllEnrollment();
+        List<Enrollment> allEnrollment = enrollmentRepository.findAll();
 
         verifyIfEnrollmentExists(enrollmentRequestDTO, allEnrollment);
 
@@ -72,7 +86,7 @@ public class EnrollmentService {
      * @throws Exception
      */
     public Enrollment insertEnrollment(EnrollmentRequestDTO enrollmentRequestDTO) {
-        List<Enrollment> allEnrollment = getAllEnrollment();
+        List<Enrollment> allEnrollment = enrollmentRepository.findAll();
 
         verifyIfEnrollmentExists(enrollmentRequestDTO, allEnrollment);
 

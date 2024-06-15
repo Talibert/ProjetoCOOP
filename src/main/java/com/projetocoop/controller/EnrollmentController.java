@@ -33,8 +33,10 @@ public class EnrollmentController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<EnrollmentResponseDTO>> getAllEnrollment(){
-        List<EnrollmentResponseDTO> list = enrollmentService.getAllEnrollment().stream().map(EnrollmentResponseDTO::new).toList();
+    public ResponseEntity<List<EnrollmentResponseDTO>> getEnrollmentList(
+            @RequestParam(value = "studentId", required = false) Long studentId,
+            @RequestParam(value = "courseId", required = false) Long courseId){
+        List<EnrollmentResponseDTO> list = enrollmentService.getEnrollmentList(studentId, courseId).stream().map(EnrollmentResponseDTO::new).toList();
         return ResponseEntity.ok().body(list);
     }
 
