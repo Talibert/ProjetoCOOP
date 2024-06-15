@@ -3,7 +3,7 @@ package com.projetocoop.dto.response;
 import com.projetocoop.entities.Course;
 import com.projetocoop.types.CoursesType;
 
-public class CoursesTypeResponseDTO {
+public class CoursesTypeResponseDTO implements Comparable<CoursesTypeResponseDTO> {
 
     private String name;
 
@@ -64,5 +64,10 @@ public class CoursesTypeResponseDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public int compareTo(CoursesTypeResponseDTO other) {
+        return this.name.compareTo(other.name);
     }
 }

@@ -1,5 +1,7 @@
 package com.projetocoop.types;
 
+import java.util.List;
+
 public enum Teacher {
     JEFFINHO("Jeffinho", "Professor especialista em JavaScript"),
     TALIBA("Taliba", "Professor especialista em JAVA"),
@@ -19,5 +21,9 @@ public enum Teacher {
 
     public String getDescription() {
         return description;
+    }
+
+    public static List<Teacher> getAllTeacher(){
+        return List.of(Teacher.TALIBA, Teacher.PONTIFICI, Teacher.JEFFINHO);
     }
 }

@@ -17,7 +17,7 @@ public class CoursesTypeController {
      */
     @GetMapping
     public ResponseEntity<List<CoursesTypeResponseDTO>> getAllCoursesType(){
-        List<CoursesTypeResponseDTO> coursesType = CoursesType.getAllCoursesType().stream().map(CoursesTypeResponseDTO::new).toList();
+        List<CoursesTypeResponseDTO> coursesType = CoursesType.getAllCoursesType().stream().map(CoursesTypeResponseDTO::new).sorted().toList();
         return ResponseEntity.ok().body(coursesType);
     }
 }
