@@ -1,5 +1,6 @@
 package com.projetocoop.controller;
 
+import com.projetocoop.dto.response.CoursesTypeResponseDTO;
 import com.projetocoop.types.CoursesType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +16,8 @@ public class CoursesTypeController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<String>> getAllCoursesType(){
-        List<String> coursesType = CoursesType.getAllCoursesType().stream().map(course -> {
-            return course.name();
-        }).sorted().toList();
+    public ResponseEntity<List<CoursesTypeResponseDTO>> getAllCoursesType(){
+        List<CoursesTypeResponseDTO> coursesType = CoursesType.getAllCoursesType().stream().map(CoursesTypeResponseDTO::new).toList();
         return ResponseEntity.ok().body(coursesType);
     }
 }
