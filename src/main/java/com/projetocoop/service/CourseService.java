@@ -33,7 +33,7 @@ public class CourseService {
     }
 
     /**
-     * Retorna uma lista com todos os cursos
+     * Retorna uma lista de cursos de acordo com os parâmetros recebidos
      * @return
      */
     public List<Course> getCourseList(String coursesType, String teacher, String especialization){
