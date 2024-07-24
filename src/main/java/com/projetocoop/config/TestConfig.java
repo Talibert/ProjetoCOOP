@@ -27,7 +27,7 @@ public class TestConfig implements CommandLineRunner {
 
         Student student1 = new Student("Guilherme", "guilhermetaliberti@gmail.com");
         Student student2 = new Student("Pontifici", "pontifici@yahoo.com");
-        Student student3 = new Student("Jeffinho", "jeffinho@bosta.com");
+        Student student3 = new Student("Jeffinho", "jeffinho@gmail.com");
 
         List<Student> students = List.of(student1, student2, student3);
 
